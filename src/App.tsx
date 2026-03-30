@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 type Priority = 'High' | 'Medium' | 'Low';
 
@@ -33,6 +33,13 @@ export default function App() {
   
   const [schedule, setSchedule] = useState<ScheduledItem[] | null>(null);
   const [overflowTasks, setOverflowTasks] = useState<Task[]>([]);
+  
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const focusInput = () => {
+    inputRef.current?.focus();
+    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   const addTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,25 +134,52 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 flex justify-center bg-slate-50 text-slate-900 font-sans">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 flex flex-col h-[90vh] md:h-[85vh]">
-        {/* Header */}
-        <header className="px-6 py-5 border-b border-slate-100 bg-white sticky top-0 z-10 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-              Plan My Day
-            </h1>
-            <p className="text-sm text-slate-500 mt-1">Smarter daily scheduling</p>
-          </div>
-          {schedule && (
-            <button 
-              onClick={() => setSchedule(null)}
-              className="text-sm text-indigo-600 font-medium hover:text-indigo-800 transition-colors"
-            >
-              ← Back to Tasks
-            </button>
-          )}
-        </header>
+    <div className="min-h-screen pb-20 bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100">
+      {/* Hero Section */}
+      <section className="text-center pt-20 pb-16 px-6 max-w-4xl mx-auto animate-in fade-in slide-in-from-top-4 duration-1000">
+        <div className="inline-block px-4 py-1.5 mb-8 text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600 rounded-full border border-indigo-100">
+          ✨ No login required • Free forever
+        </div>
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
+          Stop playing Tetris with your <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">to-do list.</span>
+        </h1>
+        <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-2xl mx-auto">
+          Dump your tasks into <span className="font-bold text-slate-900">ToDoDoDoo</span> and watch them automagically transform into a perfectly timed schedule.
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button 
+            onClick={focusInput}
+            className="group px-10 py-5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl shadow-2xl shadow-indigo-200 transition-all hover:-translate-y-1 active:translate-y-0 text-xl flex items-center gap-3"
+          >
+            Automagically Plan My Day 
+            <span className="transition-transform group-hover:rotate-12">🚀</span>
+          </button>
+        </div>
+        <p className="mt-8 text-base text-slate-400 italic">
+          No accounts. No fuss. Just focus.
+        </p>
+      </section>
+
+      {/* Main App Container */}
+      <div className="flex justify-center px-4 md:px-8">
+        <div className="w-full max-w-xl bg-white rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] overflow-hidden border border-slate-100 flex flex-col min-h-[600px]">
+          {/* Header */}
+          <header className="px-8 py-6 border-b border-slate-100 bg-white sticky top-0 z-10 flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                ToDoDoDoo
+              </h2>
+              <p className="text-sm text-slate-500 mt-1 font-medium">Smarter daily scheduling</p>
+            </div>
+            {schedule && (
+              <button 
+                onClick={() => setSchedule(null)}
+                className="text-sm text-indigo-600 font-semibold hover:text-indigo-800 transition-colors bg-indigo-50 px-4 py-2 rounded-xl"
+              >
+                ← Back to Tasks
+              </button>
+            )}
+          </header>
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-8">
@@ -158,11 +192,12 @@ export default function App() {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1.5">Task Name</label>
                     <input
+                      ref={inputRef}
                       type="text"
                       value={taskName}
                       onChange={(e) => setTaskName(e.target.value)}
                       placeholder="What do you need to do?"
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all bg-white text-lg placeholder:text-slate-300"
                     />
                   </div>
                   <div className="flex gap-4">
@@ -346,5 +381,6 @@ export default function App() {
         )}
       </div>
     </div>
-  );
+  </div>
+);
 }
